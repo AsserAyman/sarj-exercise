@@ -17,15 +17,14 @@ export async function GET(
     }
 
     // If the first attempt fails, we could try an alternative URL format
-    // Uncomment if needed:
-    // const alternativeResponse = await fetch(
-    //   `${BASE_URL}/cache/epub/${bookId}/pg${bookId}.txt`
-    // );
-    //
-    // if (alternativeResponse.ok) {
-    //   const text = await alternativeResponse.text();
-    //   return NextResponse.json({ text });
-    // }
+    const alternativeResponse = await fetch(
+      `${BASE_URL}/cache/epub/${bookId}/pg${bookId}.txt`
+    );
+
+    if (alternativeResponse.ok) {
+      const text = await alternativeResponse.text();
+      return NextResponse.json({ text });
+    }
 
     return NextResponse.json(
       { error: "Failed to fetch book text. Text format not available." },
