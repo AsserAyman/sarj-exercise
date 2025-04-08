@@ -19,7 +19,7 @@ export default function Home() {
     "book" | "characters" | "interactions" | "graph"
   >("book");
   const [analysisStep, setAnalysisStep] = useState<
-    "idle" | "fetching" | "analyzing" | "complete"
+    "idle" | "fetchingMetadata" | "fetchingText" | "analyzing" | "complete"
   >("idle");
 
   const { mutate: analyzeBook, isPending } = useMutation({
@@ -29,7 +29,7 @@ export default function Home() {
       setCharacters([]);
       setInteractions([]);
       setActiveTab("book");
-      setAnalysisStep("fetching");
+      setAnalysisStep("fetchingMetadata");
 
       try {
         // First fetch the metadata
@@ -37,6 +37,7 @@ export default function Home() {
         setBookData((prev) => ({ ...prev, metadata }));
 
         // Then fetch the text
+        setAnalysisStep("fetchingText");
         const text = await fetchBookText(id);
         setBookData((prev) => ({ ...prev, text }));
 
@@ -78,6 +79,7 @@ export default function Home() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
     if (!bookId.trim()) return;
 
     analyzeBook(bookId);
@@ -90,14 +92,34 @@ export default function Home() {
 
   const getAnalysisStatusText = () => {
     switch (analysisStep) {
-      case "fetching":
-        return "Fetching book...";
+      case "fetchingMetadata":
+        return "Fetching book metadata...";
+      case "fetchingText":
+        return "Fetching book text...";
       case "analyzing":
         return "Analyzing characters & interactions...";
       default:
         return "Analyze";
     }
   };
+
+  const analysisSteps = [
+    {
+      id: "fetchingMetadata",
+      label: "Metadata",
+      description: "Fetching book metadata",
+    },
+    {
+      id: "fetchingText",
+      label: "Book Text",
+      description: "Downloading book content",
+    },
+    {
+      id: "analyzing",
+      label: "Analysis",
+      description: "Identifying characters & relationships",
+    },
+  ];
 
   return (
     <div className="flex min-h-screen flex-col items-center p-6">
@@ -129,10 +151,98 @@ export default function Home() {
               className="px-6 py-3 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={isPending}
             >
-              {isPending ? getAnalysisStatusText() : "Analyze"}
+              {isPending ? "Processing..." : "Analyze"}
             </button>
           </div>
         </form>
+
+        {isPending && (
+          <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6 mt-4">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+              {getAnalysisStatusText()}
+            </h2>
+
+            <div className="space-y-6">
+              <div className="relative">
+                <div className="overflow-hidden h-2 mb-4 text-xs flex rounded bg-gray-200 dark:bg-gray-700">
+                  <div
+                    className="transition-all duration-500 shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-indigo-500"
+                    style={{
+                      width:
+                        analysisStep === "idle"
+                          ? "0%"
+                          : analysisStep === "fetchingMetadata"
+                          ? "33%"
+                          : analysisStep === "fetchingText"
+                          ? "67%"
+                          : "100%",
+                    }}
+                  ></div>
+                </div>
+              </div>
+
+              <div className="flex justify-between">
+                {analysisSteps.map((step) => (
+                  <div
+                    key={step.id}
+                    className={`text-center flex flex-col items-center relative w-1/3 ${
+                      analysisStep === step.id ||
+                      (analysisStep === "complete" &&
+                        step.id === "analyzing") ||
+                      (analysisStep === "analyzing" &&
+                        (step.id === "fetchingMetadata" ||
+                          step.id === "fetchingText")) ||
+                      (analysisStep === "fetchingText" &&
+                        step.id === "fetchingMetadata")
+                        ? "text-indigo-600 dark:text-indigo-400"
+                        : "text-gray-400 dark:text-gray-500"
+                    }`}
+                  >
+                    <div
+                      className={`w-8 h-8 mb-2 rounded-full flex items-center justify-center text-xs transition-colors ${
+                        analysisStep === step.id ||
+                        (analysisStep === "complete" &&
+                          step.id === "analyzing") ||
+                        (analysisStep === "analyzing" &&
+                          (step.id === "fetchingMetadata" ||
+                            step.id === "fetchingText")) ||
+                        (analysisStep === "fetchingText" &&
+                          step.id === "fetchingMetadata")
+                          ? "bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 border-2 border-indigo-500"
+                          : "bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-500 border border-gray-300 dark:border-gray-700"
+                      }`}
+                    >
+                      {analysisStep === step.id && (
+                        <div className="absolute w-8 h-8 rounded-full animate-ping opacity-30 bg-indigo-400 dark:bg-indigo-600"></div>
+                      )}
+                      <span className="relative">
+                        {analysisStep === "complete" &&
+                        (step.id === "fetchingMetadata" ||
+                          step.id === "fetchingText" ||
+                          step.id === "analyzing")
+                          ? "✓"
+                          : analysisStep === "analyzing" &&
+                            (step.id === "fetchingMetadata" ||
+                              step.id === "fetchingText")
+                          ? "✓"
+                          : analysisStep === "fetchingText" &&
+                            step.id === "fetchingMetadata"
+                          ? "✓"
+                          : step.id === analysisStep
+                          ? "●"
+                          : "○"}
+                      </span>
+                    </div>
+                    <div className="text-xs font-medium">{step.label}</div>
+                    <div className="text-xs mt-1 hidden sm:block max-w-[120px] mx-auto">
+                      {step.description}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
 
         {error && (
           <div className="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md text-red-700 dark:text-red-400">
