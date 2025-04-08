@@ -5,6 +5,7 @@ import { useMutation } from "@tanstack/react-query";
 import { fetchBookMetadata, fetchBookText } from "@/api/gutenberg";
 import { BookData, Character, CharacterInteraction } from "@/api/types";
 import CharacterGraph from "@/components/CharacterGraph";
+import Image from "next/image";
 
 export default function Home() {
   const [bookId, setBookId] = useState("");
@@ -83,6 +84,11 @@ export default function Home() {
     if (!bookId.trim()) return;
 
     analyzeBook(bookId);
+  };
+
+  // Function to get the book cover URL
+  const getBookCoverUrl = (bookId: string) => {
+    return `https://www.gutenberg.org/cache/epub/${bookId}/pg${bookId}.cover.medium.jpg`;
   };
 
   // Function to display a preview of the text (first 500 characters)
@@ -252,33 +258,88 @@ export default function Home() {
         )}
 
         {bookData.metadata && (
-          <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-              Book Information
-            </h2>
-            <div className="space-y-2">
-              <p>
-                <span className="font-medium">Title:</span>{" "}
-                {bookData.metadata.title}
-              </p>
-              <p>
-                <span className="font-medium">Author:</span>{" "}
-                {bookData.metadata.author}
-              </p>
-              <p>
-                <span className="font-medium">Book ID:</span>{" "}
-                {bookData.metadata.id}
-              </p>
-              <p>
-                <a
-                  href={bookData.metadata.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300"
-                >
-                  View on Gutenberg
-                </a>
-              </p>
+          <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden">
+            <div className="flex flex-col md:flex-row">
+              <div className="w-full md:w-1/3 bg-gradient-to-br from-indigo-900 to-indigo-700 dark:from-gray-900 dark:to-gray-700 p-6 flex items-center justify-center">
+                <div className="relative w-48 h-64 rounded-lg overflow-hidden shadow-xl transform hover:scale-105 transition-transform duration-300">
+                  {bookData.metadata.id && (
+                    <Image
+                      src={getBookCoverUrl(bookData.metadata.id)}
+                      alt={`Cover for ${bookData.metadata.title}`}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 192px"
+                      className="object-cover"
+                      style={{ objectFit: "cover" }}
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.src =
+                          "https://via.placeholder.com/192x256?text=No+Cover+Available";
+                      }}
+                    />
+                  )}
+                </div>
+              </div>
+
+              <div className="w-full md:w-2/3 p-6">
+                <div className="space-y-5">
+                  <div>
+                    <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+                      {bookData.metadata.title}
+                    </h1>
+                    <p className="text-xl text-gray-600 dark:text-gray-300 mt-1">
+                      by{" "}
+                      <span className="font-semibold">
+                        {bookData.metadata.author}
+                      </span>
+                    </p>
+                  </div>
+
+                  {bookData.metadata.summary && (
+                    <div>
+                      <h2 className="text-xl font-semibold text-gray-800 dark:text-white border-b border-gray-200 dark:border-gray-700 pb-2 mb-3">
+                        Summary
+                      </h2>
+                      <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                        {bookData.metadata.summary}
+                      </p>
+                    </div>
+                  )}
+
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-700">
+                    <div className="mb-3 sm:mb-0">
+                      <span className="text-gray-500 dark:text-gray-400 text-sm block">
+                        Book ID:
+                      </span>
+                      <span className="font-mono text-gray-700 dark:text-gray-300">
+                        {bookData.metadata.id}
+                      </span>
+                    </div>
+
+                    <a
+                      href={bookData.metadata.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md transition-colors shadow-sm"
+                    >
+                      <svg
+                        className="w-4 h-4 mr-2"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                        />
+                      </svg>
+                      View on Gutenberg
+                    </a>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         )}
@@ -286,49 +347,113 @@ export default function Home() {
         {bookData.metadata && (
           <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden">
             <div className="border-b border-gray-200 dark:border-gray-700">
-              <nav className="flex">
+              <nav className="flex flex-wrap">
                 <button
                   onClick={() => setActiveTab("book")}
-                  className={`px-4 py-3 font-medium text-sm ${
+                  className={`px-4 py-3.5 font-medium text-sm ${
                     activeTab === "book"
-                      ? "border-b-2 border-indigo-500 text-indigo-600 dark:border-indigo-400 dark:text-indigo-400"
-                      : "text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+                      ? "border-b-2 border-indigo-500 text-indigo-600 dark:border-indigo-400 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/20"
+                      : "text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/30"
                   }`}
                 >
-                  Book Preview
+                  <span className="flex items-center">
+                    <svg
+                      className="w-4 h-4 mr-2"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+                      />
+                    </svg>
+                    Book Preview
+                  </span>
                 </button>
                 <button
                   onClick={() => setActiveTab("characters")}
-                  className={`px-4 py-3 font-medium text-sm ${
+                  className={`px-4 py-3.5 font-medium text-sm ${
                     activeTab === "characters"
-                      ? "border-b-2 border-indigo-500 text-indigo-600 dark:border-indigo-400 dark:text-indigo-400"
-                      : "text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+                      ? "border-b-2 border-indigo-500 text-indigo-600 dark:border-indigo-400 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/20"
+                      : "text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/30"
                   }`}
                   disabled={characters.length === 0}
                 >
-                  Characters
+                  <span className="flex items-center">
+                    <svg
+                      className="w-4 h-4 mr-2"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                      />
+                    </svg>
+                    Characters
+                  </span>
                 </button>
                 <button
                   onClick={() => setActiveTab("interactions")}
-                  className={`px-4 py-3 font-medium text-sm ${
+                  className={`px-4 py-3.5 font-medium text-sm ${
                     activeTab === "interactions"
-                      ? "border-b-2 border-indigo-500 text-indigo-600 dark:border-indigo-400 dark:text-indigo-400"
-                      : "text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+                      ? "border-b-2 border-indigo-500 text-indigo-600 dark:border-indigo-400 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/20"
+                      : "text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/30"
                   }`}
                   disabled={interactions.length === 0}
                 >
-                  Interactions
+                  <span className="flex items-center">
+                    <svg
+                      className="w-4 h-4 mr-2"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                      />
+                    </svg>
+                    Interactions
+                  </span>
                 </button>
                 <button
                   onClick={() => setActiveTab("graph")}
-                  className={`px-4 py-3 font-medium text-sm ${
+                  className={`px-4 py-3.5 font-medium text-sm ${
                     activeTab === "graph"
-                      ? "border-b-2 border-indigo-500 text-indigo-600 dark:border-indigo-400 dark:text-indigo-400"
-                      : "text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+                      ? "border-b-2 border-indigo-500 text-indigo-600 dark:border-indigo-400 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/20"
+                      : "text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/30"
                   }`}
                   disabled={interactions.length === 0}
                 >
-                  Relationship Graph
+                  <span className="flex items-center">
+                    <svg
+                      className="w-4 h-4 mr-2"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M7 3v4a1 1 0 001 1h4M7 3h10a1 1 0 011 1v8m0 0H6m12 0v8a1 1 0 01-1 1H7a1 1 0 01-1-1v-4"
+                      />
+                    </svg>
+                    Relationship Graph
+                  </span>
                 </button>
               </nav>
             </div>

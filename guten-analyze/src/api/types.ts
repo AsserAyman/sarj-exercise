@@ -3,6 +3,7 @@ export interface BookMetadata {
   title: string;
   author: string;
   url: string;
+  summary: string;
 }
 
 export interface BookData {
