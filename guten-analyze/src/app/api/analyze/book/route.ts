@@ -18,7 +18,7 @@ export async function POST(request: Request) {
     }
 
     // Truncate text if it's too long (Groq has token limits)
-    const truncatedText = text.slice(0, 5000); // Increased but still within token limits
+    const truncatedText = text.slice(0, 20000); // Increased but still within token limits
 
     const prompt = `
       Analyze the following text from the book "${title || "unknown"}":
@@ -27,7 +27,7 @@ export async function POST(request: Request) {
       
       Complete the following two tasks:
       
-      TASK 1: Extract all characters from this text. For each character provide:
+      TASK 1: Extract all main single characters from this novel text,skip any unknown characters (A genleman, A Priest, etc..), skip the book introduction and other non-novel text. For each character provide:
       1. Full name
       2. Any aliases or nicknames 
       3. Brief description (1-2 sentences)
