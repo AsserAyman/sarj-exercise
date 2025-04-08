@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { fetchBookMetadata, fetchBookText } from "@/api/gutenberg";
 import { BookData, Character, CharacterInteraction } from "@/api/types";
+import CharacterGraph from "@/components/CharacterGraph";
 
 export default function Home() {
   const [bookId, setBookId] = useState("");
@@ -15,7 +16,7 @@ export default function Home() {
   const [interactions, setInteractions] = useState<CharacterInteraction[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<
-    "book" | "characters" | "interactions"
+    "book" | "characters" | "interactions" | "graph"
   >("book");
   const [analysisStep, setAnalysisStep] = useState<
     "idle" | "fetching" | "analyzing" | "complete"
@@ -208,6 +209,17 @@ export default function Home() {
                 >
                   Interactions
                 </button>
+                <button
+                  onClick={() => setActiveTab("graph")}
+                  className={`px-4 py-3 font-medium text-sm ${
+                    activeTab === "graph"
+                      ? "border-b-2 border-indigo-500 text-indigo-600 dark:border-indigo-400 dark:text-indigo-400"
+                      : "text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+                  }`}
+                  disabled={interactions.length === 0}
+                >
+                  Relationship Graph
+                </button>
               </nav>
             </div>
 
@@ -311,6 +323,28 @@ export default function Home() {
                   </div>
                 </div>
               )}
+
+              {activeTab === "graph" &&
+                characters.length > 0 &&
+                interactions.length > 0 && (
+                  <div>
+                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                      Character Relationship Graph
+                    </h2>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                      Interactive graph showing relationships between
+                      characters. Click on a character to see details. Drag to
+                      reposition nodes, scroll to zoom, and use the controls on
+                      the right for additional options.
+                    </p>
+                    <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+                      <CharacterGraph
+                        characters={characters}
+                        interactions={interactions}
+                      />
+                    </div>
+                  </div>
+                )}
             </div>
           </div>
         )}

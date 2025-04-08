@@ -33,7 +33,7 @@ export async function POST(request: Request) {
       3. Brief description (1-2 sentences)
       4. Importance level (main, secondary, minor)
       
-      TASK 2: Identify interactions between the characters. For each pair of characters that interact, provide:
+      TASK 2: Identify interactions between the characters. Avoid any duplicate interactions, for example if character A and character B interact, do not include character B and character A. For each pair of characters that interact, provide:
       1. The names of the two characters
       2. A brief description of their relationship (1-2 sentences)
       3. The nature of their interaction (allies, enemies, family, romantic, etc.)
