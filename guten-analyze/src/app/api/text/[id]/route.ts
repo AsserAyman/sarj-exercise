@@ -5,7 +5,8 @@ export async function GET(
   request: Request,
   { params }: { params: { id: string } }
 ) {
-  const bookId = params.id;
+  // Await params before accessing properties
+  const { id: bookId } = await params;
 
   try {
     const response = await fetch(`${BASE_URL}/files/${bookId}/${bookId}.txt`);
