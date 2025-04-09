@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { useMutation } from "@tanstack/react-query";
+import { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { analyzeBook } from "@/api/client";
 import { BookData, Character, CharacterInteraction } from "@/api/types";
 import CharacterGraph from "@/components/CharacterGraph";
@@ -9,6 +9,7 @@ import Image from "next/image";
 
 export default function Home() {
   const [bookId, setBookId] = useState("");
+  const [currentBookId, setCurrentBookId] = useState("");
   const [bookData, setBookData] = useState<BookData>({
     metadata: null,
     text: null,
@@ -23,61 +24,78 @@ export default function Home() {
     "idle" | "fetchingMetadata" | "fetchingText" | "analyzing" | "complete"
   >("idle");
 
-  const { mutate: processBook, isPending } = useMutation({
-    mutationFn: async (id: string) => {
-      // Clear previous data and errors
-      setError(null);
-      setCharacters([]);
-      setInteractions([]);
-      setActiveTab("book");
-      setAnalysisStep("fetchingMetadata");
+  // This query is always active for the current book ID
+  // It will use cached data when available
+  const { data, isError, isFetching } = useQuery({
+    queryKey: ["bookAnalysis", currentBookId],
+    queryFn: async () => {
+      if (!currentBookId) return null;
 
-      try {
-        // Simulate multi-step progress with the unified API call
+      // Only show progress indicators when we're actively fetching
+      if (isFetching) {
+        // Clear previous data and errors
+        setError(null);
+        setCharacters([]);
+        setInteractions([]);
+        setActiveTab("book");
+        setAnalysisStep("fetchingMetadata");
 
-        // We'll set up a Promise that will resolve with the API response
-        const apiPromise = analyzeBook(id);
+        try {
+          // Simulate multi-step progress with the unified API call
 
-        // Simulate fetching metadata
-        // Wait 500ms before moving to the next step
-        await new Promise((resolve) => setTimeout(resolve, 500));
-        setAnalysisStep("fetchingText");
+          // We'll set up a Promise that will resolve with the API response
+          const apiPromise = analyzeBook(currentBookId);
 
-        // Simulate fetching text
-        // Wait 500ms before moving to the next step
-        await new Promise((resolve) => setTimeout(resolve, 500));
-        setAnalysisStep("analyzing");
+          // Simulate fetching metadata
+          // Wait 500ms before moving to the next step
+          await new Promise((resolve) => setTimeout(resolve, 500));
+          setAnalysisStep("fetchingText");
 
-        // Actually await the API response which should happen during "analyzing" step
-        const result = await apiPromise;
+          // Simulate fetching text
+          // Wait 500ms before moving to the next step
+          await new Promise((resolve) => setTimeout(resolve, 500));
+          setAnalysisStep("analyzing");
 
-        // Update all state at once with the complete data
-        setBookData({
-          metadata: result.metadata,
-          text: result.text,
-        });
-        setCharacters(result.characters || []);
-        setInteractions(result.interactions || []);
-        setActiveTab("characters");
-        setAnalysisStep("complete");
-
-        return result;
-      } catch (err) {
-        setError(
-          err instanceof Error ? err.message : "An unknown error occurred"
-        );
-        setAnalysisStep("idle");
-        throw err;
+          // Actually await the API response which should happen during "analyzing" step
+          const result = await apiPromise;
+          return result;
+        } catch (err) {
+          setError(
+            err instanceof Error ? err.message : "An unknown error occurred"
+          );
+          setAnalysisStep("idle");
+          throw err;
+        }
       }
+
+      // If not fetching (using cache), just call the API without UI indicators
+      return await analyzeBook(currentBookId);
     },
+    enabled: currentBookId !== "",
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 30 * 60 * 1000, // 30 minutes (formerly cacheTime)
+    refetchOnWindowFocus: false,
   });
+
+  // Update UI state whenever data changes (from network or cache)
+  useEffect(() => {
+    if (data) {
+      setBookData({
+        metadata: data.metadata,
+        text: data.text,
+      });
+      setCharacters(data.characters || []);
+      setInteractions(data.interactions || []);
+      setAnalysisStep("complete");
+    }
+  }, [data]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!bookId.trim()) return;
 
-    processBook(bookId);
+    setCurrentBookId(bookId);
   };
 
   // Function to get the book cover URL
@@ -139,19 +157,19 @@ export default function Home() {
               onChange={(e) => setBookId(e.target.value)}
               className="flex-1 px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-800 dark:text-white"
               placeholder="Enter book ID (e.g., 1661 for Sherlock Holmes)"
-              disabled={isPending}
+              disabled={isFetching}
             />
             <button
               type="submit"
               className="px-6 py-3 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
-              disabled={isPending}
+              disabled={isFetching || !bookId.trim()}
             >
-              {isPending ? "Processing..." : "Analyze"}
+              {isFetching ? "Processing..." : "Analyze"}
             </button>
           </div>
         </form>
 
-        {isPending && (
+        {isFetching && (
           <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6 mt-4">
             <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
               {getAnalysisStatusText()}
@@ -243,7 +261,7 @@ export default function Home() {
           </div>
         )}
 
-        {error && (
+        {isError && (
           <div className="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md text-red-700 dark:text-red-400">
             <p className="font-medium">Error</p>
             <p>{error}</p>
