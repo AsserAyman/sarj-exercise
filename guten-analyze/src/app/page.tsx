@@ -91,11 +91,6 @@ export default function Home() {
     return `https://www.gutenberg.org/cache/epub/${bookId}/pg${bookId}.cover.medium.jpg`;
   };
 
-  // Function to display a preview of the text (first 500 characters)
-  const getTextPreview = (text: string) => {
-    return text.slice(0, 500) + (text.length > 500 ? "..." : "");
-  };
-
   const getAnalysisStatusText = () => {
     switch (analysisStep) {
       case "fetchingMetadata":
@@ -466,7 +461,7 @@ export default function Home() {
                   </h2>
                   <div className="prose dark:prose-invert max-w-none">
                     <pre className="whitespace-pre-wrap font-mono text-sm bg-gray-50 dark:bg-gray-900 p-4 rounded-md overflow-auto max-h-96">
-                      {getTextPreview(bookData.text)}
+                      {bookData.text}
                     </pre>
                     <p className="text-right mt-2">
                       <span className="text-gray-500 dark:text-gray-400">
