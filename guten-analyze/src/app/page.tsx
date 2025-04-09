@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { fetchBookMetadata, fetchBookText } from "@/api/gutenberg";
+import { fetchBookMetadata, fetchBookText } from "@/api/client";
 import { BookData, Character, CharacterInteraction } from "@/api/types";
 import CharacterGraph from "@/components/CharacterGraph";
 import Image from "next/image";
