@@ -15,13 +15,11 @@ interface AnalysisResponse {
  * API route handler for /api/analyze/[id]
  * Fetches and analyzes a book from Project Gutenberg
  */
-export async function GET({
-  params,
-}: {
-  params: Promise<{ id: string }> | { id: string };
-}): Promise<NextResponse<AnalysisResponse | { error: string }>> {
-  const resolvedParams = await params;
-  const bookId = resolvedParams.id;
+export async function GET(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> | { id: string } }
+) {
+  const { id: bookId } = await params;
 
   try {
     const [metadata, text] = await Promise.all([
