@@ -9,6 +9,8 @@ import { AnalysisProgress } from "@/components/AnalysisProgress";
 import { BookMetadataCard } from "@/components/BookMetadata";
 import { BookTabs } from "@/components/BookTabs";
 import { ErrorMessage } from "@/components/ErrorMessage";
+import { BookCarousel } from "@/components/BookCarousel";
+import { FeatureHighlights } from "@/components/FeatureHighlights";
 
 type AnalysisStep =
   | "idle"
@@ -85,7 +87,7 @@ export default function Home() {
       <main className="max-w-4xl w-full space-y-8">
         {/* Header */}
         <div className="text-center">
-          <h1 className="text-4xl font-bold text-gray-900 dark:text-white">
+          <h1 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-300 dark:to-purple-300">
             Gutenberg Insights
           </h1>
           <p className="mt-3 text-lg text-gray-600 dark:text-gray-400">
@@ -93,14 +95,52 @@ export default function Home() {
           </p>
         </div>
 
+        {/* Book Search Field - Always visible */}
         <BookSearch onSearch={handleSearch} isLoading={isLoading} />
 
+        {/* Analysis Progress - Show when loading */}
         {isLoading && <AnalysisProgress analysisStep={analysisStep} />}
 
+        {/* Error Message - Show when there's an error */}
         <ErrorMessage message={errorMessage} />
 
+        {/* Landing Page Content - Show when no book is selected */}
+        {analysisStep === "idle" && !metadata && (
+          <>
+            {/* Featured Books Carousel */}
+            <div className="text-center mb-6">
+              <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-3">
+                Discover Literary Treasures
+              </h2>
+              <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+                Explore the complex relationships between characters, analyze
+                themes, and uncover insights from classic literature. Enter a
+                book ID from Project Gutenberg to begin your journey.
+              </p>
+            </div>
+            <BookCarousel
+              bookIds={[
+                "1342",
+                "64317",
+                "2701",
+                "11",
+                "2600",
+                "1661",
+                "84",
+                "1787",
+              ]}
+              onSelectBook={handleSearch}
+            />
+
+            {/* Feature Highlights */}
+            <FeatureHighlights />
+          </>
+        )}
+
+        {/* Book Metadata - Show when book is loaded */}
         {metadata && <BookMetadataCard metadata={metadata} />}
 
+        {/* Book Analysis Tabs - Show when book is loaded */}
         {metadata && (
           <BookTabs
             text={text}
