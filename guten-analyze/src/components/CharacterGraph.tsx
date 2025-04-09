@@ -210,8 +210,8 @@ function Flow({ characters, interactions }: CharacterGraphProps) {
         "link",
         d3
           .forceLink(forceLinks)
-          .id(function (d: any) {
-            return d.id;
+          .id(function (d: d3.SimulationNodeDatum) {
+            return (d as SimulationNode).id;
           })
           .distance(250)
       )
