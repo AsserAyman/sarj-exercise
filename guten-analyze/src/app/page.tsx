@@ -4,7 +4,6 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { analyzeBook } from "@/api/client";
 
-// Import our components
 import { BookSearch } from "@/components/BookSearch";
 import { AnalysisProgress } from "@/components/AnalysisProgress";
 import { BookMetadataCard } from "@/components/BookMetadata";
@@ -22,7 +21,6 @@ export default function Home() {
   const [currentBookId, setCurrentBookId] = useState("");
   const [analysisStep, setAnalysisStep] = useState<AnalysisStep>("idle");
 
-  // Book analysis query with optimized structure
   const {
     data,
     isLoading,
@@ -95,19 +93,14 @@ export default function Home() {
           </p>
         </div>
 
-        {/* Search Form */}
         <BookSearch onSearch={handleSearch} isLoading={isLoading} />
 
-        {/* Analysis Progress */}
         {isLoading && <AnalysisProgress analysisStep={analysisStep} />}
 
-        {/* Error Message */}
         <ErrorMessage message={errorMessage} />
 
-        {/* Book Metadata */}
         {metadata && <BookMetadataCard metadata={metadata} />}
 
-        {/* Book Content Tabs */}
         {metadata && (
           <BookTabs
             text={text}
