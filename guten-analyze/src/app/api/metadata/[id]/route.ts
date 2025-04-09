@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import { BASE_URL } from "@/api/constants";
 
+// Disable SSL certificate verification as gutenberg certificate is expired
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
