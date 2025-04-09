@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { fetchBookMetadata, fetchBookText } from "@/api/client";
+import { analyzeBook } from "@/api/client";
 import { BookData, Character, CharacterInteraction } from "@/api/types";
 import CharacterGraph from "@/components/CharacterGraph";
 import Image from "next/image";
@@ -23,7 +23,7 @@ export default function Home() {
     "idle" | "fetchingMetadata" | "fetchingText" | "analyzing" | "complete"
   >("idle");
 
-  const { mutate: analyzeBook, isPending } = useMutation({
+  const { mutate: processBook, isPending } = useMutation({
     mutationFn: async (id: string) => {
       // Clear previous data and errors
       setError(null);
@@ -33,41 +33,35 @@ export default function Home() {
       setAnalysisStep("fetchingMetadata");
 
       try {
-        // First fetch the metadata
-        const metadata = await fetchBookMetadata(id);
-        setBookData((prev) => ({ ...prev, metadata }));
+        // Simulate multi-step progress with the unified API call
 
-        // Then fetch the text
+        // We'll set up a Promise that will resolve with the API response
+        const apiPromise = analyzeBook(id);
+
+        // Simulate fetching metadata
+        // Wait 500ms before moving to the next step
+        await new Promise((resolve) => setTimeout(resolve, 500));
         setAnalysisStep("fetchingText");
-        const text = await fetchBookText(id);
-        setBookData((prev) => ({ ...prev, text }));
 
-        // Now analyze the book content
+        // Simulate fetching text
+        // Wait 500ms before moving to the next step
+        await new Promise((resolve) => setTimeout(resolve, 500));
         setAnalysisStep("analyzing");
 
-        const response = await fetch("/api/analyze/book", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            text,
-            title: metadata.title,
-          }),
+        // Actually await the API response which should happen during "analyzing" step
+        const result = await apiPromise;
+
+        // Update all state at once with the complete data
+        setBookData({
+          metadata: result.metadata,
+          text: result.text,
         });
-
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.error || "Failed to analyze book");
-        }
-
-        const analysisData = await response.json();
-        setCharacters(analysisData.characters || []);
-        setInteractions(analysisData.interactions || []);
+        setCharacters(result.characters || []);
+        setInteractions(result.interactions || []);
         setActiveTab("characters");
         setAnalysisStep("complete");
 
-        return { metadata, text, analysisData };
+        return result;
       } catch (err) {
         setError(
           err instanceof Error ? err.message : "An unknown error occurred"
@@ -83,7 +77,7 @@ export default function Home() {
 
     if (!bookId.trim()) return;
 
-    analyzeBook(bookId);
+    processBook(bookId);
   };
 
   // Function to get the book cover URL
@@ -173,9 +167,9 @@ export default function Home() {
                         analysisStep === "idle"
                           ? "0%"
                           : analysisStep === "fetchingMetadata"
-                          ? "33%"
+                          ? "33.33%"
                           : analysisStep === "fetchingText"
-                          ? "67%"
+                          ? "66.66%"
                           : "100%",
                     }}
                   ></div>
@@ -189,7 +183,9 @@ export default function Home() {
                     className={`text-center flex flex-col items-center relative w-1/3 ${
                       analysisStep === step.id ||
                       (analysisStep === "complete" &&
-                        step.id === "analyzing") ||
+                        (step.id === "fetchingMetadata" ||
+                          step.id === "fetchingText" ||
+                          step.id === "analyzing")) ||
                       (analysisStep === "analyzing" &&
                         (step.id === "fetchingMetadata" ||
                           step.id === "fetchingText")) ||
@@ -203,7 +199,9 @@ export default function Home() {
                       className={`w-8 h-8 mb-2 rounded-full flex items-center justify-center text-xs transition-colors ${
                         analysisStep === step.id ||
                         (analysisStep === "complete" &&
-                          step.id === "analyzing") ||
+                          (step.id === "fetchingMetadata" ||
+                            step.id === "fetchingText" ||
+                            step.id === "analyzing")) ||
                         (analysisStep === "analyzing" &&
                           (step.id === "fetchingMetadata" ||
                             step.id === "fetchingText")) ||
