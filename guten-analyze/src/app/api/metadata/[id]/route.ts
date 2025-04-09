@@ -3,7 +3,7 @@ import { BASE_URL } from "@/api/constants";
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   // Await params before accessing properties
   const { id: bookId } = await params;
