@@ -1,9 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { analyzeBook } from "@/api/client";
-import { BookData, Character, CharacterInteraction } from "@/api/types";
 
 // Import our components
 import { BookSearch } from "@/components/BookSearch";
@@ -12,79 +11,75 @@ import { BookMetadataCard } from "@/components/BookMetadata";
 import { BookTabs } from "@/components/BookTabs";
 import { ErrorMessage } from "@/components/ErrorMessage";
 
+type AnalysisStep =
+  | "idle"
+  | "fetchingMetadata"
+  | "fetchingText"
+  | "analyzing"
+  | "complete";
+
 export default function Home() {
   const [currentBookId, setCurrentBookId] = useState("");
-  const [bookData, setBookData] = useState<BookData>({
-    metadata: null,
-    text: null,
-  });
-  const [characters, setCharacters] = useState<Character[]>([]);
-  const [interactions, setInteractions] = useState<CharacterInteraction[]>([]);
-  const [error, setError] = useState<string | null>(null);
-  const [analysisStep, setAnalysisStep] = useState<
-    "idle" | "fetchingMetadata" | "fetchingText" | "analyzing" | "complete"
-  >("idle");
+  const [analysisStep, setAnalysisStep] = useState<AnalysisStep>("idle");
 
-  // Book analysis query
-  const { data, isFetching } = useQuery({
+  // Book analysis query with optimized structure
+  const {
+    data,
+    isLoading,
+    error: queryError,
+  } = useQuery({
     queryKey: ["bookAnalysis", currentBookId],
     queryFn: async () => {
       if (!currentBookId) return null;
 
-      if (isFetching) {
-        // Reset state for new analysis
-        setError(null);
-        setCharacters([]);
-        setInteractions([]);
+      try {
         setAnalysisStep("fetchingMetadata");
 
-        try {
-          // Simulate multi-step progress
-          const apiPromise = analyzeBook(currentBookId);
+        // Start the actual API call early
+        const apiPromise = analyzeBook(currentBookId);
 
-          // Simulate fetching steps with delays
-          await new Promise((resolve) => setTimeout(resolve, 500));
-          setAnalysisStep("fetchingText");
+        // Simulate multi-step progress for user feedback
+        await new Promise((resolve) => setTimeout(resolve, 500));
+        setAnalysisStep("fetchingText");
 
-          await new Promise((resolve) => setTimeout(resolve, 500));
-          setAnalysisStep("analyzing");
+        await new Promise((resolve) => setTimeout(resolve, 500));
+        setAnalysisStep("analyzing");
 
-          // Await the actual API response
-          return await apiPromise;
-        } catch (err) {
-          setError(
-            err instanceof Error ? err.message : "An unknown error occurred"
-          );
-          setAnalysisStep("idle");
-          throw err;
-        }
+        // Await the actual API response
+        const result = await apiPromise;
+        setAnalysisStep("complete");
+        return result;
+      } catch (err) {
+        setAnalysisStep("idle");
+        throw err;
       }
-
-      // If using cache, just call the API without UI indicators
-      return await analyzeBook(currentBookId);
     },
-    enabled: currentBookId !== "",
+    enabled: Boolean(currentBookId),
     staleTime: 5 * 60 * 1000, // 5 minutes
     gcTime: 30 * 60 * 1000, // 30 minutes
     refetchOnWindowFocus: false,
   });
 
-  // Update UI state when data changes
-  useEffect(() => {
-    if (data) {
-      setBookData({
-        metadata: data.metadata,
-        text: data.text,
-      });
-      setCharacters(data.characters || []);
-      setInteractions(data.interactions || []);
-      setAnalysisStep("complete");
-    }
-  }, [data]);
+  // Extract data for better code readability
+  const metadata = data?.metadata ?? null;
+  const text = data?.text ?? null;
+  const characters = data?.characters ?? [];
+  const interactions = data?.interactions ?? [];
+
+  // Format error message
+  const errorMessage =
+    queryError instanceof Error
+      ? queryError.message
+      : queryError
+      ? "An unknown error occurred"
+      : null;
 
   // Handle search submission
   const handleSearch = (bookId: string) => {
-    setCurrentBookId(bookId);
+    if (bookId !== currentBookId) {
+      setCurrentBookId(bookId);
+      setAnalysisStep("idle");
+    }
   };
 
   return (
@@ -101,21 +96,21 @@ export default function Home() {
         </div>
 
         {/* Search Form */}
-        <BookSearch onSearch={handleSearch} isLoading={isFetching} />
+        <BookSearch onSearch={handleSearch} isLoading={isLoading} />
 
         {/* Analysis Progress */}
-        {isFetching && <AnalysisProgress analysisStep={analysisStep} />}
+        {isLoading && <AnalysisProgress analysisStep={analysisStep} />}
 
         {/* Error Message */}
-        <ErrorMessage message={error} />
+        <ErrorMessage message={errorMessage} />
 
         {/* Book Metadata */}
-        {bookData.metadata && <BookMetadataCard metadata={bookData.metadata} />}
+        {metadata && <BookMetadataCard metadata={metadata} />}
 
         {/* Book Content Tabs */}
-        {bookData.metadata && (
+        {metadata && (
           <BookTabs
-            text={bookData.text}
+            text={text}
             characters={characters}
             interactions={interactions}
           />
