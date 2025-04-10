@@ -9,11 +9,12 @@ import { AnalysisProgress } from "@/components/progress-indicator";
 import { BookMetadataCard } from "@/components/BookMetadata";
 import { BookTabs } from "@/components/BookTabs";
 import { ErrorMessage } from "@/components/ErrorMessage";
-import { BookCarousel } from "@/components/BookCarousel";
+
 import { FeatureHighlights } from "@/components/FeatureHighlights";
 import { Header } from "@/components/Header";
 import { HomeButton } from "@/components/HomeButton";
 import { AnalysisStepStatus } from "@/components/progress-indicator/types";
+import { BookCarousel } from "@/components/carousel";
 
 export default function Home() {
   const [currentBookId, setCurrentBookId] = useState("");

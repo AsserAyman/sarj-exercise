@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { BookMetadata as BookMetadataType } from "@/api/types";
+import { getBookCoverUrl } from "./carousel/utils";
 
 interface BookMetadataProps {
   metadata: BookMetadataType;
@@ -7,9 +8,6 @@ interface BookMetadataProps {
 
 export function BookMetadataCard({ metadata }: BookMetadataProps) {
   // Function to get the book cover URL
-  const getBookCoverUrl = (bookId: string) => {
-    return `https://www.gutenberg.org/cache/epub/${bookId}/pg${bookId}.cover.medium.jpg`;
-  };
 
   return (
     <div className=" bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden">
