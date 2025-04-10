@@ -16,7 +16,7 @@ export function ProgressBar({ analysisStep }: ProgressBarProps) {
 
   return (
     <div className="relative">
-      <div className="overflow-hidden h-2 mb-4 text-xs flex rounded bg-gray-200 dark:bg-gray-700">
+      <div className="overflow-hidden h-2 mb-4 text-xs flex rounded bg-gray-700">
         <div
           className="transition-all duration-500 shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-indigo-500"
           style={{ width: progressWidth }}

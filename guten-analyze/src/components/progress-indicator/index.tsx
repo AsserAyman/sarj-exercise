@@ -6,8 +6,8 @@ import { StepIndicator } from "./StepIndicator";
 
 export function AnalysisProgress({ analysisStep }: AnalysisProgressProps) {
   return (
-    <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6 mt-4">
-      <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+    <div className="bg-gray-800 shadow-md rounded-lg p-6 mt-4">
+      <h2 className="text-xl font-semibold text-white mb-4">
         {getAnalysisStatusText(analysisStep)}
       </h2>
 

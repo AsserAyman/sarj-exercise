@@ -54,7 +54,7 @@ export function BookCarousel({ bookIds, onSelectBook }: BookCarouselProps) {
     <div className="relative overflow-hidden py-14 px-4">
       <div className="relative flex justify-center items-center h-[480px]">
         {/* Spotlight effect for active book */}
-        <div className="absolute w-[320px] h-[480px] bg-gradient-to-b from-indigo-900/10 via-indigo-800/5 to-transparent dark:from-indigo-600/20 dark:via-indigo-500/10 dark:to-transparent rounded-[100%] blur-xl"></div>
+        <div className="absolute w-[320px] h-[480px] bg-gradient-to-b from-indigo-600/20 via-indigo-500/10 to-transparent rounded-[100%] blur-xl"></div>
 
         {books.map((book, index) => {
           // Calculate the position offset based on the current index

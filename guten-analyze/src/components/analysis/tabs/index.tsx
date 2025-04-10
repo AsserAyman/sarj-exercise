@@ -8,8 +8,8 @@ export function BookTabs({ text, characters, interactions }: BookTabsProps) {
   const [activeTab, setActiveTab] = useState<TabType>("book");
 
   return (
-    <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden">
-      <div className="border-b border-gray-200 dark:border-gray-700">
+    <div className="bg-gray-800 shadow-md rounded-lg overflow-hidden">
+      <div className="border-b border-gray-700">
         <nav className="flex flex-wrap">
           <TabButton
             isActive={activeTab === "book"}

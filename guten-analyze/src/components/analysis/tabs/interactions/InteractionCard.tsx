@@ -10,7 +10,7 @@ interface InteractionCardProps {
 
 export default function InteractionCard({ interaction }: InteractionCardProps) {
   return (
-    <div className="p-4 rounded-lg border border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-gray-800/50">
+    <div className="p-4 rounded-lg border border-gray-700 bg-gray-800/50">
       <div className="flex justify-between items-start">
         <h3 className="font-bold text-lg">
           {interaction.character1} & {interaction.character2}

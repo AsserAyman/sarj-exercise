@@ -14,7 +14,7 @@ export default function CharacterCard({ character }: CharacterCardProps) {
     >
       <h3 className="font-bold text-lg">{character.name}</h3>
       {character.aliases && character.aliases.length > 0 && (
-        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+        <p className="text-sm text-gray-400 mt-1">
           Also known as: {character.aliases.join(", ")}
         </p>
       )}

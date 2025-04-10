@@ -17,20 +17,18 @@ export function StepIndicator({ step, currentStep }: StepIndicatorProps) {
   return (
     <div
       className={`text-center flex flex-col items-center relative w-1/3 ${
-        isActive
-          ? "text-indigo-600 dark:text-indigo-400"
-          : "text-gray-400 dark:text-gray-500"
+        isActive ? "text-indigo-400" : "text-gray-500"
       }`}
     >
       <div
         className={`w-8 h-8 mb-2 rounded-full flex items-center justify-center text-xs transition-colors ${
           isActive
-            ? "bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 border-2 border-indigo-500"
-            : "bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-500 border border-gray-300 dark:border-gray-700"
+            ? "bg-indigo-900/30 text-indigo-400 border-2 border-indigo-500"
+            : "bg-gray-800 text-gray-500 border border-gray-700"
         }`}
       >
         {currentStep === step.id && (
-          <div className="absolute w-8 h-8 rounded-full animate-ping opacity-30 bg-indigo-400 dark:bg-indigo-600"></div>
+          <div className="absolute w-8 h-8 rounded-full animate-ping opacity-30 bg-indigo-600"></div>
         )}
         <span className="relative">
           {isCompleted ? "✓" : step.id === currentStep ? "●" : "○"}

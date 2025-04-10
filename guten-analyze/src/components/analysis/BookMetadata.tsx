@@ -8,9 +8,9 @@ interface BookMetadataProps {
 
 export function BookMetadataCard({ metadata }: BookMetadataProps) {
   return (
-    <div className=" bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden">
+    <div className="bg-gray-800 shadow-md rounded-lg overflow-hidden">
       <div className="flex flex-col md:flex-row">
-        <div className="w-full md:w-1/3 bg-gradient-to-br from-indigo-900 to-indigo-700 dark:from-gray-900 dark:to-gray-700 p-6 flex items-center justify-center">
+        <div className="w-full md:w-1/3 bg-gradient-to-br from-gray-900 to-gray-700 p-6 flex items-center justify-center">
           <div className="relative w-48 h-64 rounded-lg overflow-hidden shadow-xl transform hover:scale-105 transition-transform duration-300">
             {metadata.id && (
               <Image
@@ -33,33 +33,29 @@ export function BookMetadataCard({ metadata }: BookMetadataProps) {
         <div className="w-full md:w-2/3 p-6">
           <div className="space-y-5">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+              <h1 className="text-3xl font-bold text-white">
                 {metadata.title}
               </h1>
-              <p className="text-xl text-gray-600 dark:text-gray-300 mt-1">
+              <p className="text-xl text-gray-300 mt-1">
                 by <span className="font-semibold">{metadata.author}</span>
               </p>
             </div>
 
             {metadata.summary && (
               <div>
-                <h2 className="text-xl font-semibold text-gray-800 dark:text-white border-b border-gray-200 dark:border-gray-700 pb-2 mb-3">
+                <h2 className="text-xl font-semibold text-white border-b border-gray-700 pb-2 mb-3">
                   Summary
                 </h2>
-                <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                <p className="text-gray-300 leading-relaxed">
                   {metadata.summary}
                 </p>
               </div>
             )}
 
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-700">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between pt-4 border-t border-gray-700">
               <div className="mb-3 sm:mb-0">
-                <span className="text-gray-500 dark:text-gray-400 text-sm block">
-                  Book ID:
-                </span>
-                <span className="font-mono text-gray-700 dark:text-gray-300">
-                  {metadata.id}
-                </span>
+                <span className="text-gray-400 text-sm block">Book ID:</span>
+                <span className="font-mono text-gray-300">{metadata.id}</span>
               </div>
 
               <a

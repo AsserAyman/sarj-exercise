@@ -38,7 +38,7 @@ export default function CharacterNode({ data }: CharacterNodeProps) {
           {data.character.name}
         </div>
         {data.character.aliases.length > 0 && (
-          <div className="text-xs text-gray-500 dark:text-gray-400 text-center mt-1 truncate">
+          <div className="text-xs text-gray-400 text-center mt-1 truncate">
             {data.character.aliases[0]}
           </div>
         )}
