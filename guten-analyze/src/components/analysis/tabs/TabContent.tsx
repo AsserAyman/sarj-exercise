@@ -1,7 +1,7 @@
 import { TabContentProps } from "./types";
 import { BookPreviewTab } from "./BookPreviewTab";
 import { CharactersTab } from "./CharactersTab";
-import { InteractionsTab } from "./InteractionsTab";
+import { InteractionsTab } from "./interactions/InteractionsTab";
 import { GraphTab } from "./GraphTab";
 
 export function TabContent({

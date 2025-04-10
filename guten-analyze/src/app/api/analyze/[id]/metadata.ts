@@ -13,11 +13,9 @@ export async function fetchBookMetadata(bookId: string): Promise<BookMetadata> {
 
   const html = await response.text();
 
-  // Extract basic metadata
   const title = html.match(/<title>(.+?)<\/title>/)?.[1] || "Unknown Title";
   const author = html.match(/by (.+?)<\/h1>/)?.[1] || "Unknown Author";
 
-  // Extract summary
   const summary = extractSummary(html);
 
   return {
@@ -35,7 +33,6 @@ export async function fetchBookMetadata(bookId: string): Promise<BookMetadata> {
 function extractSummary(html: string): string {
   let summary = "No summary available for this book.";
 
-  // Try to find summary in the summary-text-container (newer format)
   const summaryMatch = html.match(
     /<div class="summary-text-container">([\s\S]+?)<\/div>/
   );
@@ -59,7 +56,6 @@ function extractSummary(html: string): string {
         summaryText += " " + hiddenTextMatch[1].trim();
       }
 
-      // Clean up HTML tags and extra whitespace
       summary = cleanHtmlText(summaryText);
     }
   }

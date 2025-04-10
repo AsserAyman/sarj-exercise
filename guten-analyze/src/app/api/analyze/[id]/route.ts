@@ -2,14 +2,6 @@ import { NextResponse } from "next/server";
 import { fetchBookMetadata } from "./metadata";
 import { fetchBookText } from "./text";
 import { analyzeBook } from "./analysis";
-import { BookMetadata, Character, CharacterInteraction } from "@/api/types";
-
-interface AnalysisResponse {
-  metadata: BookMetadata;
-  text: string;
-  characters: Character[];
-  interactions: CharacterInteraction[];
-}
 
 /**
  * API route handler for /api/analyze/[id]
