@@ -16,8 +16,8 @@ export function BookSearch({ onSearch, isLoading }: BookSearchProps) {
 
   return (
     <form onSubmit={handleSubmit} className="w-full max-w-2xl mx-auto">
-      <div className="grid grid-cols-4 gap-4">
-        <div className="col-span-3">
+      <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
+        <div className="col-span-1 sm:col-span-3">
           <input
             id="bookId"
             name="bookId"
