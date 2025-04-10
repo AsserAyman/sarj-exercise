@@ -36,6 +36,10 @@ export default function RelationshipLegend({
           <div className="w-4 h-1 bg-pink-500"></div>
           <span className="text-xs">Romantic</span>
         </div>
+        <div className="flex items-center gap-2 mt-2 pt-2 border-t border-gray-200 dark:border-gray-700">
+          <div className="w-4 h-0.5 bg-gray-400 animate-pulse"></div>
+          <span className="text-xs">Animated = Significance ≥ 8</span>
+        </div>
       </div>
       <div className="mt-4 space-y-2">
         <button
