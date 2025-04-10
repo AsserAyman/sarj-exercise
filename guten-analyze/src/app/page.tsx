@@ -7,9 +7,8 @@ import { analyzeBook } from "@/api/client";
 import { BookSearch } from "@/components/BookSearch";
 import { AnalysisProgress } from "@/components/progress-indicator";
 import { BookMetadataCard } from "@/components/analysis/BookMetadata";
-import { BookTabs } from "@/components/analysis/BookTabs";
 import { ErrorMessage } from "@/components/ErrorMessage";
-
+import { BookTabs } from "@/components/analysis/tabs";
 import { FeatureHighlights } from "@/components/FeatureHighlights";
 import { Header } from "@/components/Header";
 import { HomeButton } from "@/components/HomeButton";

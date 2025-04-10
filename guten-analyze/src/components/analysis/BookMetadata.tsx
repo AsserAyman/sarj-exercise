@@ -7,8 +7,6 @@ interface BookMetadataProps {
 }
 
 export function BookMetadataCard({ metadata }: BookMetadataProps) {
-  // Function to get the book cover URL
-
   return (
     <div className=" bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden">
       <div className="flex flex-col md:flex-row">
