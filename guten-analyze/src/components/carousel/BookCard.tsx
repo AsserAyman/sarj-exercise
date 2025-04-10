@@ -8,7 +8,6 @@ export function BookCard({
   book,
   isActive,
   position,
-  distanceFromActive,
   zIndex,
   scale,
   opacity,
