@@ -6,12 +6,6 @@ import { generateBookDetails } from "./utils";
 import { BookCard } from "./BookCard";
 import { CarouselControls } from "./CarouselControls";
 
-// Re-export components and types
-export * from "./types";
-export * from "./utils";
-export * from "./BookCard";
-export * from "./CarouselControls";
-
 export function BookCarousel({ bookIds, onSelectBook }: BookCarouselProps) {
   const [books, setBooks] = useState<BookDetails[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);

@@ -4,16 +4,6 @@ import { TabButton } from "./TabButton";
 import { TabContent } from "./TabContent";
 import { BookIcon, CharactersIcon, InteractionsIcon, GraphIcon } from "./icons";
 
-// Re-export all components and types
-export * from "./types";
-export * from "./TabButton";
-export * from "./BookPreviewTab";
-export * from "./CharactersTab";
-export * from "./InteractionsTab";
-export * from "./GraphTab";
-export * from "./TabContent";
-export * from "./icons";
-
 export function BookTabs({ text, characters, interactions }: BookTabsProps) {
   const [activeTab, setActiveTab] = useState<TabType>("book");
 
