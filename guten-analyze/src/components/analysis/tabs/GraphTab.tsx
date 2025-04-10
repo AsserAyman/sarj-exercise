@@ -1,5 +1,5 @@
 import { Character, CharacterInteraction } from "@/api/types";
-import CharacterGraph from "@/components/analysis/tabs/graph/CharacterGraph";
+import CharacterGraph from "./graph";
 
 interface GraphTabProps {
   characters: Character[];

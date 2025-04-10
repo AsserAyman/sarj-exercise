@@ -1,6 +1,7 @@
 "use client";
 
 import { Character, CharacterInteraction } from "@/api/types";
+import { getImportanceBadgeClass } from "./utils";
 
 interface CharacterNodeDetailsProps {
   character: Character;
@@ -19,18 +20,6 @@ export default function CharacterNodeDetails({
       interaction.character1 === character.name ||
       interaction.character2 === character.name
   );
-
-  // Get importance badge color
-  const getImportanceBadgeClass = (importance: string) => {
-    switch (importance) {
-      case "main":
-        return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300";
-      case "secondary":
-        return "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300";
-      default:
-        return "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300";
-    }
-  };
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
