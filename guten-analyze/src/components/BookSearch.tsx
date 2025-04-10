@@ -25,7 +25,7 @@ export function BookSearch({ onSearch, isLoading }: BookSearchProps) {
             required
             value={bookId}
             onChange={(e) => setBookId(e.target.value)}
-            className="w-full px-4 py-4 border border-indigo-500/30 bg-black/60 text-white rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-lg"
+            className="w-full px-4 py-4 border border-indigo-500/60 bg-black/60 text-white rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-lg"
             placeholder="Enter book ID (e.g., 1661 for Sherlock Holmes)"
             disabled={isLoading}
           />
