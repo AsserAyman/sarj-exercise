@@ -25,7 +25,6 @@ export default function Home() {
   const [currentBookId, setCurrentBookId] = useState("");
   const [analysisStep, setAnalysisStep] = useState<AnalysisStep>("idle");
 
-  // Add function to reset to landing page
   const resetToLanding = () => {
     setCurrentBookId("");
     setAnalysisStep("idle");
@@ -50,7 +49,7 @@ export default function Home() {
         await new Promise((resolve) => setTimeout(resolve, 500));
         setAnalysisStep("fetchingText");
 
-        await new Promise((resolve) => setTimeout(resolve, 500));
+        await new Promise((resolve) => setTimeout(resolve, 700));
         setAnalysisStep("analyzing");
 
         // Await the actual API response
@@ -68,13 +67,11 @@ export default function Home() {
     refetchOnWindowFocus: false,
   });
 
-  // Extract data for better code readability
   const metadata = data?.metadata ?? null;
   const text = data?.text ?? null;
   const characters = data?.characters ?? [];
   const interactions = data?.interactions ?? [];
 
-  // Format error message
   const errorMessage =
     queryError instanceof Error
       ? queryError.message
@@ -82,7 +79,6 @@ export default function Home() {
       ? "An unknown error occurred"
       : null;
 
-  // Handle search submission
   const handleSearch = (bookId: string) => {
     if (bookId !== currentBookId) {
       setCurrentBookId(bookId);
@@ -99,7 +95,6 @@ export default function Home() {
       </div>
 
       <main className=" w-full space-y-8 relative z-10">
-        {/* Header */}
         <Header />
 
         {/* Home button - Only show when a book is selected */}
@@ -109,13 +104,10 @@ export default function Home() {
           showButton={Boolean(metadata || analysisStep !== "idle")}
         />
 
-        {/* Book Search Field - Always visible */}
         <BookSearch onSearch={handleSearch} isLoading={isLoading} />
 
-        {/* Error Message - Show when there's an error */}
         <ErrorMessage message={errorMessage} />
 
-        {/* Landing Page Content - Show when no book is selected */}
         {analysisStep === "idle" && !metadata && (
           <>
             {/* Featured Books Carousel */}
@@ -133,19 +125,15 @@ export default function Home() {
               onSelectBook={handleSearch}
             />
 
-            {/* Feature Highlights */}
             <FeatureHighlights />
           </>
         )}
 
-        {/* Book Metadata - Show when book is loaded */}
         <div className="max-w-4xl mx-auto flex flex-col space-y-10">
-          {/* Analysis Progress - Show when loading */}
           {isLoading && <AnalysisProgress analysisStep={analysisStep} />}
 
           {metadata && <BookMetadataCard metadata={metadata} />}
 
-          {/* Book Analysis Tabs - Show when book is loaded */}
           {metadata && (
             <BookTabs
               text={text}
