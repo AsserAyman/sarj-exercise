@@ -6,8 +6,8 @@ import { analyzeBook } from "@/api/client";
 
 import { BookSearch } from "@/components/BookSearch";
 import { AnalysisProgress } from "@/components/progress-indicator";
-import { BookMetadataCard } from "@/components/BookMetadata";
-import { BookTabs } from "@/components/BookTabs";
+import { BookMetadataCard } from "@/components/analysis/BookMetadata";
+import { BookTabs } from "@/components/analysis/BookTabs";
 import { ErrorMessage } from "@/components/ErrorMessage";
 
 import { FeatureHighlights } from "@/components/FeatureHighlights";

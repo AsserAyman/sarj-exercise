@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { BookMetadata as BookMetadataType } from "@/api/types";
-import { getBookCoverUrl } from "./carousel/utils";
+import { getBookCoverUrl } from "../carousel/utils";
 
 interface BookMetadataProps {
   metadata: BookMetadataType;

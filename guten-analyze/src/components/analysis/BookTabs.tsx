@@ -1,6 +1,6 @@
 import React from "react";
 import { Character, CharacterInteraction } from "@/api/types";
-import CharacterGraph from "./CharacterGraph";
+import CharacterGraph from "./graph/CharacterGraph";
 
 interface TabButtonProps {
   isActive: boolean;
