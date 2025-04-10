@@ -32,6 +32,7 @@ Then open [https://guten-analyze.vercel.app/](https://guten-analyze.vercel.app/)
 - [GROQ](https://groq.com/) for LLM interface
 - [ReactFlow](https://reactflow.dev/) for interactive diagrams
 - [D3 Force](https://d3js.org/d3-force) for visualization physics
+- [TanStack Query](https://tanstack.com/query/latest/docs/framework/react/overview) for data fetching, caching and state management
 - Meta Llama 4 Scout model for text analysis
 - Framer Motion
 - Tailwind CSS

@@ -32,6 +32,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 - LLM-powered text analysis using the `meta-llama/llama-4-scout-17b-16e-instruct` model
 - Interactive visualizations with [ReactFlow](https://reactflow.dev/) and [D3-Force](https://d3js.org/d3-force)
 - Animated UI with Framer Motion
+- Efficient data fetching and caching with TanStack Query
 
 ## Technical Implementation
 
@@ -40,6 +41,10 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 - GROQ SDK for integrating with the Llama 4 Scout model
 - ReactFlow for building interactive node-based diagrams
 - D3-Force for physics-based visualization of text relationships
+- [TanStack Query](https://tanstack.com/query/latest/docs/framework/react/overview) for:
+  - Client-side data fetching and state management
+  - Automatic caching of API responses
+  - Loading and error states management
 
 ## Configuration
 
