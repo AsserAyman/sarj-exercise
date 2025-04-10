@@ -1,36 +1,59 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Guten Analyze Application
 
-## Getting Started
+A Next.js application for text analysis and visualization of Project Gutenberg books.
 
-First, run the development server:
+## Development
 
 ```bash
+# Start the development server with Turbopack
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+
+# Build for production
+npm run build
+
+# Start the production server
+npm start
+
+# Run linting
+npm run lint
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the application.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Application Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `/src/app` - Next.js App Router pages and layouts
+- `/src/components` - Reusable React components
+- `/src/api` - API integrations and services
 
-## Learn More
+## Features
 
-To learn more about Next.js, take a look at the following resources:
+- Text analysis of [Project Gutenberg](https://www.gutenberg.org/) books using GROQ AI
+- LLM-powered text analysis using the `meta-llama/llama-4-scout-17b-16e-instruct` model
+- Interactive visualizations with [ReactFlow](https://reactflow.dev/) and [D3-Force](https://d3js.org/d3-force)
+- Animated UI with Framer Motion
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Technical Implementation
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Next.js App Router for page routing and API routes
+- Next.js API routes as a proxy server to avoid CORS restrictions when communicating with external APIs
+- GROQ SDK for integrating with the Llama 4 Scout model
+- ReactFlow for building interactive node-based diagrams
+- D3-Force for physics-based visualization of text relationships
 
-## Deploy on Vercel
+## Configuration
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+This application uses environment variables for configuration. Create or modify `.env.local` with the required values:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+GROQ_API_KEY=your_groq_api_key
+```
+
+## Next.js Resources
+
+- [Next.js Documentation](https://nextjs.org/docs)
+- [Learn Next.js](https://nextjs.org/learn)
+- [Next.js GitHub Repository](https://github.com/vercel/next.js)
+- [Next.js Deployment Documentation](https://nextjs.org/docs/app/building-your-application/deploying)
+
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to optimize and load [Geist](https://vercel.com/font), a custom font family from Vercel.
