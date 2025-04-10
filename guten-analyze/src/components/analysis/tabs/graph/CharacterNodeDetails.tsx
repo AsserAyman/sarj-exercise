@@ -14,7 +14,6 @@ export default function CharacterNodeDetails({
   interactions,
   onClose,
 }: CharacterNodeDetailsProps) {
-  // Filter interactions involving this character
   const characterInteractions = interactions.filter(
     (interaction) =>
       interaction.character1 === character.name ||

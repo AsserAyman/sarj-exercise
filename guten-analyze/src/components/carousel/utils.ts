@@ -1,3 +1,5 @@
+import { BASE_URL } from "@/api/constants";
+
 export function getBookTitle(id: string): string {
   const titles: Record<string, string> = {
     "1342": "Pride and Prejudice",
@@ -13,7 +15,7 @@ export function getBookTitle(id: string): string {
 }
 
 export function getBookCoverUrl(id: string): string {
-  return `https://www.gutenberg.org/cache/epub/${id}/pg${id}.cover.medium.jpg`;
+  return `${BASE_URL}/cache/epub/${id}/pg${id}.cover.medium.jpg`;
 }
 
 export function generateBookDetails(bookIds: string[]) {

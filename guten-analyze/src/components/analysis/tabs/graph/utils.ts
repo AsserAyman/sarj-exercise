@@ -3,7 +3,6 @@ import { Node, Edge } from "reactflow";
 import { Character, CharacterInteraction } from "@/api/types";
 import { SimulationNode } from "./types";
 
-// Helper function to get edge color based on relationship nature
 export function getEdgeColor(nature: string): string {
   switch (nature.toLowerCase()) {
     case "allies":
@@ -32,7 +31,6 @@ export const getImportanceBadgeClass = (importance: string) => {
   }
 };
 
-// Create nodes from characters
 export function createNodes(characters: Character[]): Node[] {
   const nodeCount = characters.length;
   const radius = Math.max(300, nodeCount * 30);
@@ -51,7 +49,6 @@ export function createNodes(characters: Character[]): Node[] {
   });
 }
 
-// Create edges from interactions
 export function createEdges(
   interactions: CharacterInteraction[],
   characterMap: Map<string, Character>
@@ -75,7 +72,6 @@ export function createEdges(
     }));
 }
 
-// Create force simulation
 export function createForceSimulation(
   nodes: Node[],
   interactions: CharacterInteraction[],

@@ -1,4 +1,3 @@
-// Function to get card border and background colors based on importance
 export function getCardClasses(importance: string) {
   switch (importance) {
     case "main":
@@ -10,7 +9,6 @@ export function getCardClasses(importance: string) {
   }
 }
 
-// Function to get importance badge colors
 export function getImportanceBadgeClasses(importance: string) {
   switch (importance) {
     case "main":

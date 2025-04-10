@@ -1,4 +1,3 @@
-// Helper function to get the color for the relationship badge
 export const getRelationshipBadgeClasses = (nature: string) => {
   const natureLower = nature.toLowerCase();
 
@@ -15,7 +14,6 @@ export const getRelationshipBadgeClasses = (nature: string) => {
   }
 };
 
-// Function to get significance badge color
 export const getSignificanceBadgeClasses = (significance: number) => {
   if (significance >= 8) {
     return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300";
