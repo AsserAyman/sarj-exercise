@@ -9,9 +9,9 @@ import { analyzeBook } from "./analysis";
  */
 export async function GET(
   request: Request,
-  { params }: { params: Promise<{ id: string }> | { id: string } }
+  { params }: { params: { id: string } }
 ) {
-  const { id: bookId } = await params;
+  const { id: bookId } = params;
 
   try {
     const [metadata, text] = await Promise.all([
