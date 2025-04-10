@@ -12,7 +12,7 @@ export function BookMetadataCard({ metadata }: BookMetadataProps) {
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden">
+    <div className=" bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden">
       <div className="flex flex-col md:flex-row">
         <div className="w-full md:w-1/3 bg-gradient-to-br from-indigo-900 to-indigo-700 dark:from-gray-900 dark:to-gray-700 p-6 flex items-center justify-center">
           <div className="relative w-48 h-64 rounded-lg overflow-hidden shadow-xl transform hover:scale-105 transition-transform duration-300">

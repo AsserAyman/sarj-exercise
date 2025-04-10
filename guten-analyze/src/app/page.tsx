@@ -83,23 +83,28 @@ export default function Home() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col items-center p-6">
-      <main className="max-w-4xl w-full space-y-8">
+    <div className="flex min-h-screen flex-col items-center p-6 bg-black text-white relative overflow-hidden">
+      {/* Background graphic elements */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute -top-24 right-0 w-96 h-96 bg-indigo-600/20 rounded-full blur-3xl transform rotate-45"></div>
+        <div className="absolute top-1/2 left-1/3 w-72 h-72 bg-indigo-900/20 rounded-full blur-3xl"></div>
+      </div>
+
+      <main className=" w-full space-y-8 relative z-10">
         {/* Header */}
-        <div className="text-center">
-          <h1 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-300 dark:to-purple-300">
-            Gutenberg Insights
+        <div className="mt-10 text-center">
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white via-indigo-200 to-indigo-400">
+            Explore Literary Worlds with AI
           </h1>
-          <p className="mt-3 text-lg text-gray-600 dark:text-gray-400">
-            Analyze your favourite Gutenberg books Now
+          <p className="max-w-2xl mx-auto mt-6 text-lg text-gray-600 dark:text-gray-400">
+            Analyze classic literature through artificial intelligence. Discover
+            themes, character relationships, and writing styles with our
+            powerful tools.
           </p>
         </div>
 
         {/* Book Search Field - Always visible */}
         <BookSearch onSearch={handleSearch} isLoading={isLoading} />
-
-        {/* Analysis Progress - Show when loading */}
-        {isLoading && <AnalysisProgress analysisStep={analysisStep} />}
 
         {/* Error Message - Show when there's an error */}
         <ErrorMessage message={errorMessage} />
@@ -108,16 +113,6 @@ export default function Home() {
         {analysisStep === "idle" && !metadata && (
           <>
             {/* Featured Books Carousel */}
-            <div className="text-center mb-6">
-              <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-3">
-                Discover Literary Treasures
-              </h2>
-              <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-                Explore the complex relationships between characters, analyze
-                themes, and uncover insights from classic literature. Enter a
-                book ID from Project Gutenberg to begin your journey.
-              </p>
-            </div>
             <BookCarousel
               bookIds={[
                 "1342",
@@ -138,16 +133,21 @@ export default function Home() {
         )}
 
         {/* Book Metadata - Show when book is loaded */}
-        {metadata && <BookMetadataCard metadata={metadata} />}
+        <div className="max-w-4xl mx-auto flex flex-col space-y-10">
+          {/* Analysis Progress - Show when loading */}
+          {isLoading && <AnalysisProgress analysisStep={analysisStep} />}
 
-        {/* Book Analysis Tabs - Show when book is loaded */}
-        {metadata && (
-          <BookTabs
-            text={text}
-            characters={characters}
-            interactions={interactions}
-          />
-        )}
+          {metadata && <BookMetadataCard metadata={metadata} />}
+
+          {/* Book Analysis Tabs - Show when book is loaded */}
+          {metadata && (
+            <BookTabs
+              text={text}
+              characters={characters}
+              interactions={interactions}
+            />
+          )}
+        </div>
       </main>
     </div>
   );

@@ -18,7 +18,7 @@ interface BookDetails {
 export function BookCarousel({ bookIds, onSelectBook }: BookCarouselProps) {
   const [books, setBooks] = useState<BookDetails[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+  const isAutoPlaying = true; // Changed to constant since we don't need to modify it
   const autoPlayRef = useRef<NodeJS.Timeout | null>(null);
 
   // Generate book details from IDs
@@ -31,7 +31,7 @@ export function BookCarousel({ bookIds, onSelectBook }: BookCarouselProps) {
     setBooks(bookDetails);
   }, [bookIds]);
 
-  // Function to get book titles (would be better to fetch from an API)
+  // Function to get book titles
   function getBookTitle(id: string): string {
     const titles: Record<string, string> = {
       "1342": "Pride and Prejudice",
@@ -76,16 +76,17 @@ export function BookCarousel({ bookIds, onSelectBook }: BookCarouselProps) {
   };
 
   const handleBookClick = (bookId: string) => {
-    // Pause autoplay when a book is selected
-    setIsAutoPlaying(false);
     onSelectBook(bookId);
   };
 
   if (books.length === 0) return null;
 
   return (
-    <div className="relative overflow-hidden py-10 px-4 rounded-xl">
-      <div className="relative flex justify-center items-center h-[400px]">
+    <div className="relative overflow-hidden py-14 px-4">
+      <div className="relative flex justify-center items-center h-[480px]">
+        {/* Spotlight effect for active book */}
+        <div className="absolute w-[320px] h-[480px] bg-gradient-to-b from-indigo-900/10 via-indigo-800/5 to-transparent dark:from-indigo-600/20 dark:via-indigo-500/10 dark:to-transparent rounded-[100%] blur-xl"></div>
+
         {books.map((book, index) => {
           // Calculate the position offset based on the current index
           const offset =
@@ -101,53 +102,95 @@ export function BookCarousel({ bookIds, onSelectBook }: BookCarouselProps) {
           const zIndex = books.length - distanceFromActive;
           const opacity = 1 - 0.25 * distanceFromActive;
 
+          // Calculate rotation for 3D effect
+          const rotation = position * 5; // 5 degrees tilt for side books
+
           return (
             <motion.div
               key={book.id}
-              initial={{ opacity: 0, scale: 0.8 }}
+              initial={{ opacity: 0, scale: 0.8, rotateY: rotation }}
               animate={{
                 x: `${position * 130}%`,
                 scale,
                 zIndex,
                 opacity,
+                rotateY: rotation,
               }}
-              transition={{ duration: 0.5 }}
-              className={`absolute w-[220px] h-[320px] cursor-pointer
+              transition={{
+                duration: 0.6,
+                ease: [0.19, 1, 0.22, 1], // Easing for smooth motion
+              }}
+              className={`absolute w-[280px] h-[400px] cursor-pointer
                 ${
                   isActive
                     ? "pointer-events-auto"
                     : "pointer-events-none md:pointer-events-auto"
                 }
                 transition-all duration-300 ease-in-out
-                hover:shadow-xl dark:shadow-indigo-900/30`}
+                hover:shadow-2xl hover:scale-105 dark:shadow-indigo-900/30`}
               onClick={() => isActive && handleBookClick(book.id)}
+              style={{
+                transformStyle: "preserve-3d",
+                perspective: "1000px",
+              }}
             >
-              <div className="relative w-full h-full rounded-lg overflow-hidden shadow-md border-2 border-white/80 dark:border-gray-800">
+              <div
+                className={`relative w-full h-full rounded-lg overflow-hidden shadow-lg
+                ${
+                  isActive
+                    ? "border-2 border-indigo-500/30 dark:border-indigo-500/30 shadow-indigo-200/50 dark:shadow-indigo-800/30"
+                    : "border border-indigo-300/30 dark:border-indigo-700/30"
+                }
+                transition-all duration-300`}
+              >
                 <Image
                   src={book.coverUrl}
                   alt={book.title || `Book cover ${book.id}`}
                   fill
-                  sizes="(max-width: 768px) 220px, 220px"
+                  sizes="(max-width: 768px) 280px, 280px"
                   className="object-cover"
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
                     target.src =
-                      "https://via.placeholder.com/220x320?text=No+Cover";
+                      "https://via.placeholder.com/280x400?text=No+Cover";
                   }}
                 />
+                {/* Book spine effect */}
+                <div className="absolute left-0 top-0 bottom-0 w-[5px] bg-gradient-to-r from-black/20 to-transparent dark:from-black/40"></div>
+
+                {/* Book edge effect */}
+                <div className="absolute right-0 top-0 h-full w-[2px] bg-gradient-to-l from-white/30 to-transparent dark:from-white/10"></div>
+
+                {/* Book shadow overlay */}
+                <div className="absolute inset-0 bg-gradient-to-tr from-black/30 via-transparent to-transparent opacity-30"></div>
               </div>
+
+              {isActive && (
+                <motion.div
+                  className="absolute -bottom-14 left-0 right-0 text-center"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.1, duration: 0.3 }}
+                >
+                  <span className="inline-block text-lg font-medium bg-black/70 text-indigo-200 dark:bg-black/90 dark:text-indigo-300 px-6 py-3 rounded-full shadow-sm">
+                    {book.title}
+                  </span>
+                </motion.div>
+              )}
             </motion.div>
           );
         })}
       </div>
 
-      <div className="flex justify-center mt-16 space-x-3">
-        <button
+      <div className="flex justify-center mt-20 space-x-6">
+        <motion.button
           onClick={handlePrev}
-          className="p-2 rounded-full bg-white/80 dark:bg-gray-800/80 hover:bg-white dark:hover:bg-gray-700 shadow-sm transition-colors"
+          className="p-3 rounded-full bg-black/20 dark:bg-black/50 hover:bg-black/30 dark:hover:bg-black/70 shadow-sm transition-colors"
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.95 }}
         >
           <svg
-            className="w-5 h-5 text-gray-700 dark:text-gray-300"
+            className="w-6 h-6 text-indigo-600 dark:text-indigo-400"
             viewBox="0 0 24 24"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -160,29 +203,33 @@ export function BookCarousel({ bookIds, onSelectBook }: BookCarouselProps) {
               strokeLinejoin="round"
             />
           </svg>
-        </button>
+        </motion.button>
 
-        <div className="flex space-x-1">
+        <div className="flex space-x-3 items-center">
           {books.map((_, index) => (
-            <button
+            <motion.button
               key={index}
               onClick={() => setCurrentIndex(index)}
-              className={`w-2 h-2 rounded-full transition-all ${
+              className={`rounded-full transition-all duration-300 ${
                 index === currentIndex
-                  ? "bg-indigo-600 dark:bg-indigo-400 w-4"
-                  : "bg-gray-300 dark:bg-gray-600"
+                  ? "bg-indigo-600 dark:bg-indigo-400 w-6 h-6"
+                  : "bg-gray-600/40 dark:bg-gray-700/40 w-4 h-4 hover:bg-indigo-400/50 dark:hover:bg-indigo-500/50"
               }`}
+              whileHover={{ scale: 1.2 }}
+              whileTap={{ scale: 0.9 }}
               aria-label={`Go to slide ${index + 1}`}
             />
           ))}
         </div>
 
-        <button
+        <motion.button
           onClick={handleNext}
-          className="p-2 rounded-full bg-white/80 dark:bg-gray-800/80 hover:bg-white dark:hover:bg-gray-700 shadow-sm transition-colors"
+          className="p-3 rounded-full bg-black/20 dark:bg-black/50 hover:bg-black/30 dark:hover:bg-black/70 shadow-sm transition-colors"
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.95 }}
         >
           <svg
-            className="w-5 h-5 text-gray-700 dark:text-gray-300"
+            className="w-6 h-6 text-indigo-600 dark:text-indigo-400"
             viewBox="0 0 24 24"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -195,7 +242,7 @@ export function BookCarousel({ bookIds, onSelectBook }: BookCarouselProps) {
               strokeLinejoin="round"
             />
           </svg>
-        </button>
+        </motion.button>
       </div>
     </div>
   );

@@ -1,8 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
-import type { ReactNode } from "react";
 import { useState } from "react";
+import type { ReactNode } from "react";
 
 interface Feature {
   title: string;
@@ -17,10 +17,10 @@ export function FeatureHighlights() {
     {
       title: "Access to Classical Literature",
       description:
-        "Explore the vast collection of Project Gutenberg with over 60,000 free e-books.",
+        "Explore the vast collection of Project Gutenberg with over 60,000 free e-books. Discover classics from Shakespeare to Austen, all in one place.",
       icon: (
         <svg
-          className="w-6 h-6"
+          className="w-8 h-8"
           viewBox="0 0 24 24"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
@@ -38,10 +38,10 @@ export function FeatureHighlights() {
     {
       title: "Character Analysis",
       description:
-        "Discover the complex relationships between characters and their significance in the story.",
+        "Discover the complex relationships between characters and their significance in the story. See who interacts with whom and how they influence the narrative.",
       icon: (
         <svg
-          className="w-6 h-6"
+          className="w-8 h-8"
           viewBox="0 0 24 24"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
@@ -66,10 +66,10 @@ export function FeatureHighlights() {
     {
       title: "Visual Relationship Graph",
       description:
-        "Visualize character relationships and interactions with an interactive network graph.",
+        "Visualize character relationships and interactions with an interactive network graph. Drag, zoom, and explore connections between characters in a dynamic visualization.",
       icon: (
         <svg
-          className="w-6 h-6"
+          className="w-8 h-8"
           viewBox="0 0 24 24"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
@@ -86,50 +86,57 @@ export function FeatureHighlights() {
   ];
 
   return (
-    <div className="mt-10 mb-6 px-4 py-8 bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-indigo-950 rounded-xl">
-      <h2 className="text-2xl font-semibold text-center text-gray-800 dark:text-white mb-8">
-        Unlock the Power of Literary Analysis
-      </h2>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div className="mt-2 mb-10 rounded-xl overflow-hidden">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
         {features.map((feature, index) => (
           <motion.div
             key={index}
-            className={`p-5 rounded-lg cursor-pointer transition-all duration-300 ${
-              hoveredIndex === index
-                ? "bg-white dark:bg-gray-800 shadow-lg"
-                : "bg-transparent hover:bg-white/60 dark:hover:bg-gray-800/60"
-            }`}
-            whileHover={{ scale: 1.03 }}
+            className="relative overflow-hidden rounded-xl bg-black/40 shadow-lg transition-all duration-300 group"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.1 }}
+            whileHover={{
+              y: -12,
+              scale: 1.05,
+              boxShadow:
+                "0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1)",
+              transition: { duration: 0.2 },
+            }}
             onHoverStart={() => setHoveredIndex(index)}
             onHoverEnd={() => setHoveredIndex(null)}
           >
-            <div
-              className={`flex items-center justify-center h-12 w-12 rounded-full mb-4 transition-colors duration-300 ${
-                hoveredIndex === index
-                  ? "bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-300"
-                  : "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400"
-              }`}
-            >
-              {feature.icon}
+            {/* Decorative diagonal gradient stripe */}
+            <div className="absolute right-0 top-0 h-24 w-24 -mr-10 -mt-10 bg-gradient-to-br from-indigo-600/30 to-indigo-800/20 rounded-full transform rotate-12"></div>
+
+            <div className="relative z-10 p-8">
+              <div className="flex flex-col items-start">
+                <div
+                  className={`flex items-center justify-center h-16 w-16 rounded-full mb-6 transition-colors duration-300 ${
+                    hoveredIndex === index
+                      ? "bg-indigo-900/80 text-indigo-200"
+                      : "bg-gray-800/70 text-gray-400"
+                  }`}
+                >
+                  {feature.icon}
+                </div>
+
+                <div className="mt-2">
+                  <h3
+                    className={`text-2xl font-semibold mb-4 transition-colors duration-300 ${
+                      hoveredIndex === index
+                        ? "text-indigo-300"
+                        : "text-gray-100"
+                    }`}
+                  >
+                    {feature.title}
+                  </h3>
+
+                  <p className="text-base text-gray-400 leading-relaxed">
+                    {feature.description}
+                  </p>
+                </div>
+              </div>
             </div>
-            <h3 className="font-medium text-gray-900 dark:text-white mb-2">
-              {feature.title}
-            </h3>
-            <motion.div
-              animate={{
-                height: hoveredIndex === index ? "auto" : 0,
-                opacity: hoveredIndex === index ? 1 : 0,
-                marginTop: hoveredIndex === index ? 8 : 0,
-              }}
-              initial={{ height: 0, opacity: 0, marginTop: 0 }}
-              transition={{ duration: 0.3 }}
-              className="overflow-hidden"
-            >
-              <p className="text-sm text-gray-600 dark:text-gray-300">
-                {feature.description}
-              </p>
-            </motion.div>
           </motion.div>
         ))}
       </div>

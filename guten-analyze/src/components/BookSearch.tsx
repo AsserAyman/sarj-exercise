@@ -15,26 +15,30 @@ export function BookSearch({ onSearch, isLoading }: BookSearchProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="mt-8 space-y-4">
-      <div className="flex gap-4">
-        <input
-          id="bookId"
-          name="bookId"
-          type="text"
-          required
-          value={bookId}
-          onChange={(e) => setBookId(e.target.value)}
-          className="flex-1 px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-800 dark:text-white"
-          placeholder="Enter book ID (e.g., 1661 for Sherlock Holmes)"
-          disabled={isLoading}
-        />
-        <button
-          type="submit"
-          className="px-6 py-3 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
-          disabled={isLoading || !bookId.trim()}
-        >
-          {isLoading ? "Processing..." : "Analyze"}
-        </button>
+    <form onSubmit={handleSubmit} className="w-full max-w-2xl mx-auto">
+      <div className="grid grid-cols-4 gap-4">
+        <div className="col-span-3">
+          <input
+            id="bookId"
+            name="bookId"
+            type="text"
+            required
+            value={bookId}
+            onChange={(e) => setBookId(e.target.value)}
+            className="w-full px-4 py-4 border border-indigo-500/30 bg-black/60 text-white rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-lg"
+            placeholder="Enter book ID (e.g., 1661 for Sherlock Holmes)"
+            disabled={isLoading}
+          />
+        </div>
+        <div className="col-span-1">
+          <button
+            type="submit"
+            className="w-full px-4 py-4 text-lg font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg shadow-lg shadow-indigo-600/30 transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+            disabled={isLoading || !bookId.trim()}
+          >
+            {isLoading ? "Processing..." : "Start Analyzing"}
+          </button>
+        </div>
       </div>
     </form>
   );
