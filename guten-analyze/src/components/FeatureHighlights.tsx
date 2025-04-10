@@ -1,7 +1,4 @@
-"use client";
-
 import { motion } from "framer-motion";
-import { useState } from "react";
 import type { ReactNode } from "react";
 
 interface Feature {
@@ -11,8 +8,6 @@ interface Feature {
 }
 
 export function FeatureHighlights() {
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-
   const features: Feature[] = [
     {
       title: "Access to Classical Literature",
@@ -91,7 +86,7 @@ export function FeatureHighlights() {
         {features.map((feature, index) => (
           <motion.div
             key={index}
-            className="relative overflow-hidden rounded-xl bg-black/40 shadow-lg transition-all duration-300 group"
+            className="group relative overflow-hidden rounded-xl bg-black/40 shadow-lg transition-all duration-300"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
@@ -102,8 +97,6 @@ export function FeatureHighlights() {
                 "0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1)",
               transition: { duration: 0.2 },
             }}
-            onHoverStart={() => setHoveredIndex(index)}
-            onHoverEnd={() => setHoveredIndex(null)}
           >
             {/* Decorative diagonal gradient stripe */}
             <div className="absolute right-0 top-0 h-24 w-24 -mr-10 -mt-10 bg-gradient-to-br from-indigo-600/30 to-indigo-800/20 rounded-full transform rotate-12"></div>
@@ -111,22 +104,16 @@ export function FeatureHighlights() {
             <div className="relative z-10 p-8">
               <div className="flex flex-col items-start">
                 <div
-                  className={`flex items-center justify-center h-16 w-16 rounded-full mb-6 transition-colors duration-300 ${
-                    hoveredIndex === index
-                      ? "bg-indigo-900/80 text-indigo-200"
-                      : "bg-gray-800/70 text-gray-400"
-                  }`}
+                  className="flex items-center justify-center h-16 w-16 rounded-full mb-6 transition-colors duration-300
+                  bg-gray-800/70 text-gray-400 group-hover:bg-indigo-900/80 group-hover:text-indigo-200"
                 >
                   {feature.icon}
                 </div>
 
                 <div className="mt-2">
                   <h3
-                    className={`text-2xl font-semibold mb-4 transition-colors duration-300 ${
-                      hoveredIndex === index
-                        ? "text-indigo-300"
-                        : "text-gray-100"
-                    }`}
+                    className="text-2xl font-semibold mb-4 transition-colors duration-300
+                    text-gray-100 group-hover:text-indigo-300"
                   >
                     {feature.title}
                   </h3>
